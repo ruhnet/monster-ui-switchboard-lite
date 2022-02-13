@@ -18,5 +18,5 @@ sup crossbar_maintenance init_app '/var/www/html/monster-ui/apps/switchboard' \
 'http://mycrossbarapi.tld:8000/v2'
 ```
 
-![Switchboard Main Screen](https://github.com/ruhnet/monster-ui-switchboard/raw/master/metadata/screenshots/switchboard.png)
+![Switchboard Main Screen](https://github.com/ruhnet/monster-ui-switchboard-lite/raw/master/metadata/screenshots/switchboard.png)
 
