@@ -1,0 +1,418 @@
+div.results-wrapper {
+	/* width: 100%; */
+	display:flex;
+	flex-wrap: wrap;
+	flex-direction: row;
+}
+
+div.content-row {
+	display:flex;
+	flex-direction: row;
+}
+
+#help-button {
+	cursor: pointer;
+}
+
+.devices-col {
+	position: relative;
+	width: auto;
+	min-width: 70%;
+}
+
+.activity_toggle {
+	position: relative;
+	float: right;
+	font-size: large;
+}
+
+.activity_outer_box {
+    -webkit-transition: width 1s ease;
+    -moz-transition: width 1s ease;
+    -o-transition: width 1s ease;
+    transition: width 1s ease;
+
+    width: 300px;
+	border: 1px solid lightgrey;
+	height: 63vh;
+	overflow: auto;
+}
+
+.smashed-horizontally {
+	width: 15px;
+	height: 15px;
+	animation: fadeout 2.0s linear;
+}
+
+.activity_header {
+	/* border: 1px solid grey; */
+	padding: 0px 10px 0px 10px;
+}
+
+.activity_log_box {
+	box-sizing: border-box;
+	background-color: #ededed;
+	/* border: 1px solid grey; */
+	z-index: 0;
+}
+
+div.device {
+	position: relative;
+  	width: 300px;
+  	/* height: 60px; */
+  	border: 2px solid #BFBFBF;
+  	background-color: white;
+  	box-shadow: 3px 3px 2px #aaaaaa;
+  	border-radius: 8px;
+  	border: 1px solid grey;
+  	margin: 10px;
+}
+
+span.device_name {
+	font-size: medium;
+	font-weight: bold;
+	color: purple;
+	/* border: 1px solid purple; */
+}
+
+div.device_sidepanel {
+	cursor: pointer;
+	position: absolute;	
+	margin-right: auto;
+	width: 12px;
+	height: 100%;
+	background-color: #00ef33;
+	border-top-left-radius: 8px;
+	border-bottom-left-radius: 8px;
+	border-right: 1px solid black;
+	/* pointer-events: auto; */
+	z-index: 0;
+}
+
+/*
+div.flasher {
+	background-color: red;
+	z-index: 1;
+}
+*/
+
+div.led {
+	position: absolute;	
+	margin-top: 10px;
+	margin-left: 2px;
+	margin-right: auto;
+	width: 7px;
+	height: 22px;
+	border-radius: 2px;
+	border: 1px solid grey;
+	z-index: 0;
+}
+
+div.call_indicator {
+	cursor: pointer;
+	background-color: royalblue;
+	z-index: 0;
+}
+
+i.call_direction {
+	color: royalblue;
+	/*
+	font-size: medium;
+	margin-left: 5px;
+	*/
+	/* display: none; */
+	transform: rotate(45deg);
+}
+
+div.direction_box {
+	cursor: pointer;
+	position: absolute;
+	right: 0;
+	top: 0;
+	padding: 3px;
+	padding-left: 5px;
+	padding-right: 5px;
+	background-color: white;
+	/* color: white; */
+	border-bottom: 1px solid grey;
+	border-left: 1px solid grey;
+	border-top-right-radius: 8px;
+	border-bottom-left-radius: 8px;
+	font-size: large;
+	z-index: 0;
+	/* animation: blinker 4s linear infinite; */
+}
+
+.call_timer {
+	display: none;
+}
+
+div.device_owner {
+	font-size: small;
+	font-weight: lighter;
+	color: #444;
+}
+
+.remote_status {
+	font-size: small;
+	font-style: italic;
+	font-weight: bold;
+	text-decoration: underline;
+	margin-right: 5px;
+}
+
+.remote_name {
+	font-style: bold;
+}
+
+.remote_number {
+	color: darkblue;
+}
+
+.hotdesk_role {
+	font-size: x-small;
+	font-weight: lighter;
+}
+
+.dev_status {
+	margin-left: auto;
+	margin-right: 24px;
+	float: right;
+	font-size: medium;
+	font-style: italic;
+	font-weight: bold;
+}
+
+div.device_slot {
+	cursor: pointer;
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	padding: 2px;
+	padding-left: 5px;
+	padding-right: 5px;
+	/* background-color: red; */
+	color: white;
+	border-top: 1px solid black;
+	border-left: 1px solid black;
+	border-top-left-radius: 8px;
+	border-bottom-right-radius: 8px;
+	font-size: medium;
+	z-index: 0;
+	/* animation: blinker 4s linear infinite; */
+}
+
+div.ext_active {
+	background-color: red;
+}
+
+div.ext_override {
+	background-color: grey;
+	/* text-decoration: line-through; */
+	font-size: small;
+	color: white;
+	padding-bottom: 0px;
+	padding-top: 0px;
+	opacity: 60%;
+}
+
+div.hotdesk {
+	font-size: small;
+	color: white;
+	background-color: blue;
+	/* background-color: royalblue; */
+	cursor: pointer;
+	position: absolute;
+	right: 0;
+	padding: 1px;
+	padding-left: 5px;
+	padding-right: 5px;
+	border-left: 1px solid black;
+	border-top: 1px solid black;
+	border-bottom: 1px solid black;
+	border-top-left-radius: 8px;
+	border-bottom-left-radius: 8px;
+	z-index: 0;
+	animation: blinker 4s linear infinite;
+}
+
+div.hotdesk_slot0 {
+	bottom: 22px;
+}
+
+div.hotdesk_slot1 {
+	bottom: 47px;
+}
+
+div.hotdesk_slot2 {
+	bottom: 65px;
+}
+
+.pickup {
+	font-weight: bold;
+	cursor: pointer;
+	pointer-events: auto;
+	z-index: 0;
+}
+
+.device {
+	font-weight: bold;
+	cursor: pointer;
+	pointer-events: auto;
+	z-index: 0;
+}
+
+.device_hidden {
+	display: block;
+}
+
+/*  /////////////////////////// */
+
+div.parked-call {
+	position: relative;
+  	width: 300px;
+  	/* height: 60px; */
+  	border: 2px solid #BFBFBF;
+  	background-color: white;
+  	box-shadow: 3px 3px 2px #aaaaaa;
+  	border-radius: 8px;
+  	border: 1px solid grey;
+  	margin: 10px;
+}
+
+div.callinfo {
+	margin-left: auto;
+  	padding: 10px 10px 10px 19px;
+	/* position: absolute; */
+	pointer-events: none;
+}
+
+span.parked-call_caller {
+	font-size: medium;
+	font-weight: bold;
+	color: purple;
+	/* border: 1px solid purple; */
+}
+
+div.parked-call_sidepanel {
+	cursor: pointer;
+	position: absolute;	
+	margin-right: auto;
+	width: 12px;
+	height: 100%;
+	background-color: red;
+	border-top-left-radius: 8px;
+	border-bottom-left-radius: 8px;
+	border-right: 1px solid black;
+	/* pointer-events: auto; */
+	z-index: 0;
+}
+
+div.parked-call_indicator {
+	cursor: pointer;
+	position: absolute;	
+	margin-top: 10px;
+	margin-left: 2px;
+	margin-right: auto;
+	width: 8px;
+	height: 20%;
+	background-color: royalblue;
+	border-radius: 2px;
+	z-index: 0;
+}
+
+div.parked-call_slot {
+	cursor: pointer;
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	padding: 3px;
+	padding-left: 5px;
+	padding-right: 5px;
+	background-color: red;
+	color: white;
+	border-top: 1px solid black;
+	border-left: 1px solid black;
+	border-top-left-radius: 8px;
+	border-bottom-right-radius: 8px;
+	font-size: large;
+	z-index: 0;
+	animation: blinker 4s linear infinite;
+}
+
+i.indicator_icon {
+	font-size: medium;
+	margin-left: 5px;
+	margin-right: 5px;
+	/* display: none; */
+}
+
+.pickup {
+	font-weight: bold;
+	cursor: pointer;
+	pointer-events: auto;
+	z-index: 0;
+}
+
+.call-parker {
+	font-weight: bold;
+	cursor: pointer;
+	pointer-events: auto;
+	z-index: 0;
+}
+
+.call-parker_hidden {
+	display: none;
+}
+
+.parked-call:nth-child(odd) .parked-call_sidepanel {
+	transform: translateZ(0);
+	animation: blinker 5s linear infinite;
+}
+
+.parked-call:nth-child(even) .parked-call_sidepanel {
+	transform: translateZ(0);
+	animation: blinker 4s linear infinite;
+}
+
+.parked-call:nth-child(3n) .parked-call_sidepanel {
+	transform: translateZ(0);
+	animation: blinker 4.5s linear infinite;
+}
+
+.ringing {
+	animation: blinker 0.5s linear infinite;
+	background-color: red;
+}
+
+.on_hold {
+	background-color: grey;
+}
+
+.rotation {
+	color: red;
+	animation: flipper 2.0s linear infinite;
+}
+
+@keyframes flipper {
+    50% {
+	    transform: rotate(90deg);
+	}
+}
+
+@keyframes blinker {
+    50% {
+	    opacity: 20%;
+	}
+}
+
+@keyframes fadeout {
+    100% {
+	    opacity: 0%;
+	}
+}
+
+
+
+
+

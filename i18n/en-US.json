@@ -1,0 +1,35 @@
+{
+	"switchboard": {
+		"welcome": "Switchboard",
+		"description": "Switchboard operator panel.",
+		"refreshButton": "Refresh",
+		"user": "User:",
+		"listDevices": "Registered Devices",
+		"noTargets": "No Targets to Monitor",
+		"events": {
+			"CHANNEL_CREATE": "Calling...",
+			"CHANNEL_ANSWER": "Answered",
+			"CHANNEL_DESTROY": "Hangup",
+			"CHANNEL_HOLD": "Hold",
+			"CHANNEL_UNHOLD": "Resumed",
+			"PARK_PARKED": "Parked",
+			"PARK_RETRIEVED": "Retrieved",
+			"PARK_ABANDONED": "Abandoned"
+		},
+		"time":"Time",
+		"log": {
+			"title": "Activity Log",
+			"clearLog": "Clear",
+			"caller": "Caller",
+			"callee": "Callee",
+			"eventType": "Event",
+			"time": "Time",
+			"noEvents": "No events yet..."
+		},
+		"help": {
+			"title": "Switchboard - Help",
+			"helptext": "Retrieve a call by clicking the red panel, the slot number, or the caller name/number. Call the person who parked the call by clicking their name or number. The parking lot will auto-refresh every 30 seconds."
+		}
+	}
+
+}

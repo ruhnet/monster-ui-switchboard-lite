@@ -1,0 +1,80 @@
+<div id="switchboard_wrapper">
+	<div class="switchboard-content row-fluid">
+		<div class="span10 offset1">
+				<div class="well title-container">
+					<h1>{{ i18n.switchboard.welcome }}</h1>
+				</div>
+			<div class="content-container">
+				<div class="content-row">
+					<div class="col devices-col">
+						<!-- <h4>{{ i18n.switchboard.listDevices }}</h4> -->
+						<div class="results-wrapper">
+						{{#each devices}}
+							<div id="{{this.id}}" data-id="{{ this.id }}" class="device">
+								<div class="device_sidepanel pickup ringer"></div>
+								<div class="call_indicator led"></div>
+								<div class="callinfo">
+									<div>
+										<i class="fa fa-volume-control-phone indicator_icon"></i>
+										<span class="device_name pickup">{{this.name}} {{this.cid_number}}</span>
+										<span class="dev_status">Idle</span>
+									</div>
+									<div class="device_owner">{{this.user.first_name}} {{this.user.last_name}}</div>
+									{{#if this.hotdesk_users.length}}
+									<div class="hotdesk_role">Hotdesk: 
+									{{#each this.hotdesk_users}}
+									[{{this.first_name}} {{this.last_name}}]
+									{{/each}}
+									</div>
+									{{/if}}
+									<!--<div class="device_owner">{{@root.i18n.switchboard.user}}</div> -->
+
+									<div>
+										<div class="remote">
+											<span class="remote_status"></span>
+											<span class="remote_name"></span> <span class="remote_number"></span>
+										</div>
+										<div class="call_timer"><span class="call_timer_minutes"></span>:<span class="call_timer_seconds"></span></div>
+										<div class="from"></div>
+										<div class="to"></div>
+									</div>
+
+									<div class="direction_box ringer"><i class="call_direction fa fa-circle"></i></div>
+									{{#each this.hotdesk_extensions}}
+									<div class="hotdesk_slot{{@index}} hotdesk pickup">{{ this }}</div>
+									{{/each}}
+									<div class="{{this.current_extension_status}} device_slot pickup">{{this.current_extension}}</div>
+								</div> <!-- callinfo -->
+							</div> <!-- device -->
+						{{/each}}
+						</div> <!-- results-wrapper -->
+					</div> <!-- col -->
+					<div class="col">
+						<div class="activity_toggle"> <a data-toggle="toggle" data-target="#activity-log"><i class="fa fa-bars"></i></a></div><br />
+						<div id="activity-log" class="activity_outer_box collapse-horizontal">
+							<div class="activity_header">
+								<h4>{{ i18n.switchboard.log.title }} &nbsp;&nbsp; <button class="btn btn-primary" type="button" id="clearEvents">{{ i18n.switchboard.log.clearLog }}</button></h4>
+							</div>
+							<div class="activity_log_box">
+							<table class="table table-condensed list-events">
+								<thead>
+									<tr>
+										<th>{{ i18n.switchboard.log.eventType }}</th>
+										<th>{{ i18n.switchboard.log.caller }}</th>
+										<th>{{ i18n.switchboard.log.callee }}</th>
+										<th>{{ i18n.switchboard.log.time }}</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr class="no-events">
+										<td colspan="4">{{ i18n.switchboard.log.noEvents }}</td>
+									</tr>
+								</tbody>
+							</table>
+						</div> <!-- activity-log -->
+					</div> <!-- col -->
+				</div> <!-- row -->
+			</div> <!-- span12 -->
+		</div> <!-- span12 -->
+	</div> <!-- row-fluid -->
+</div> <!-- wrapper -->

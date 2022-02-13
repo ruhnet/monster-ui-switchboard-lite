@@ -1,0 +1,26 @@
+{
+	"name": "switchboard",
+	"i18n": {
+		"en-US": {
+			"label": "Switchboard",
+			"description": "Switchboard operator panel."
+		}
+	},
+	"tags": [
+		"developer"
+	],
+	"icon": "switchboard_app.png",
+	"screenshots": [
+		"Parkinglot.png"
+	],
+	"api_url": "",
+	"author": "RuhNet",
+	"version": "1.0",
+	"license": "GPLv3",
+	"price": 0,
+	"urls": {
+		"documentation": "{documentation_url}",
+		"howto": "{howto_video_url}"
+	},
+	"pvt_type": "app"
+}

@@ -1,0 +1,13 @@
+ <div class="results-wrapper">
+    {{#each parkedCalls}}
+	<div id="{{this.presence_user}}" class="parked-call"><div class="parked-call_sidepanel pickup"></div><div class="parked-call_indicator pickup"></div>
+		<div class="parked-call_callinfo">
+			<i class="fa fa-volume-control-phone pickup"></i> &nbsp; <span class="parked-call_caller pickup">{{this.cid_name}} {{this.cid_number}}</span><br /><div>&nbsp;&nbsp;<span class="call-parker_hidden"><span class="call-parker_label">{{@root.i18n.switchboard.parker}} </span><span id="{{this.ringback_id}}" class="call-parker"></span></span></div>
+			<div class="parked-call_slot pickup">{{this.parking_slot}}</div>
+		</div>
+	</div>
+    {{else}}
+      <!-- In a loop, you need to use '@root' to come back to the global scope and use the i18n variable -->
+      <div>{{ @root.i18n.switchboard.noTargets }}</div>
+    {{/each}}
+</div>
