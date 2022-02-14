@@ -21,11 +21,23 @@ sup crossbar_maintenance init_app '/var/www/html/monster-ui/apps/switchboard' \
 ```
 The default Blackhole websockets port is 5555, but it is unencrypted. I **strongly** recommend that you proxy it with TLS on another port. I use Nginx for this, (see sample Nginx config below), but mainly because I'm using Nginx as the webserver for Monster and some other things on the system. HAproxy works perfectly for this also.
 
-In your Monster-UI directory, edit the `js/config.js` file to include the following line:
-	socket: 'wss://mykazooserver.tld:5443',
+In your Monster-UI directory, edit the `js/config.js` file to include the following line in the `api` block:
+```
+socket: 'wss://mykazooserver.tld:5443',
+```
 
 Or if you are just running on a test server (or you want to live dangerously), and you are not proxying websockets with TLS:
-	socket: 'ws://mykazooserver.tld:5555',
+```
+socket: 'ws://mykazooserver.tld:5555',
+```
+Your `api` block in `js/config.js` should then look something like this:
+```
+    api: {
+        provisioner: 'https://p.ruhnet.co/', //you'll have this is you use a provisioner
+        socket: 'wss://mykazooserver:5443', //websockets URL
+        default: 'https://mykazooserver:8443/v2/' //API URL
+    },
+```
 
 Also, make sure that the Blackhole port you are using is open in your firewall
 
