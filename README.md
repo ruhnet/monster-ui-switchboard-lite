@@ -19,6 +19,44 @@ git clone https://github.com/ruhnet/monster-ui-switchboard-lite switchboard
 sup crossbar_maintenance init_app '/var/www/html/monster-ui/apps/switchboard' \
 'http://mycrossbarapi.tld:8000/v2'
 ```
+The default Blackhole websockets port is 5555, but it is unencrypted. I **strongly** recommend that you proxy it with TLS on another port. I use Nginx for this, (see sample Nginx config below), but mainly because I'm using Nginx as the webserver for Monster and some other things on the system. HAproxy works perfectly for this also.
+
+In your Monster-UI directory, edit the `js/config.js` file to include the following line:
+	socket: 'wss://mykazooserver.tld:5443',
+
+Or if you are just running on a test server (or you want to live dangerously), and you are not proxying websockets with TLS:
+	socket: 'ws://mykazooserver.tld:5555',
+
+Also, make sure that the Blackhole port you are using is open in your firewall
 
 ![Switchboard Main Screen](https://github.com/ruhnet/monster-ui-switchboard-lite/raw/master/metadata/screenshots/switchboard.png)
-
+###Simple Nginx Config to Proxy TLS for Websockets
+```
+upstream blackhole {
+    server kazooapps1.mydomain.tld:5555;
+}
+server {
+    listen 5443 ssl http2;
+    server_name mykazooserver.tld;
+    location / {
+		proxy_pass http://blackhole;
+    	proxy_http_version 1.1;
+		proxy_set_header Upgrade $http_upgrade;
+		proxy_set_header Connection "Upgrade";
+		proxy_set_header Host $host;
+		proxy_set_header X-Real-IP $remote_addr;
+    }
+    ssl_certificate /etc/ssl/mykazooserver.tld/fullchain.pem;
+    ssl_certificate_key /etc/ssl/mykazooserver.tld/privkey.pem;
+    ssl_trusted_certificate /etc/ssl/mykazooserver.tld/fullchain.pem;
+    ssl_dhparam /etc/ssl/private/dh_2048.pem;
+    ssl_session_cache shared:SSL:20m;
+    ssl_session_timeout 4h;
+    ssl_session_tickets on;
+    ssl_protocols TLSv1.3 TLSv1.2;
+    ssl_prefer_server_ciphers on;
+    add_header Strict-Transport-Security max-age=15768000;
+    ssl_stapling on;
+    ssl_stapling_verify on;
+}
+```
