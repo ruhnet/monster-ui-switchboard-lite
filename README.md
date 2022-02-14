@@ -33,7 +33,7 @@ socket: 'ws://mykazooserver.tld:5555',
 Your `api` block in `js/config.js` should then look something like this:
 ```
     api: {
-        provisioner: 'https://p.ruhnet.co/', //you'll have this is you use a provisioner
+        provisioner: 'https://p.ruhnet.co/', //you'll have this line if you use a provisioner
         socket: 'wss://mykazooserver:5443', //websockets URL
         default: 'https://mykazooserver:8443/v2/' //API URL
     },
