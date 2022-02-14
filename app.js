@@ -47,6 +47,7 @@ define(function (require) {
 		//////////////////////////////////////////////////////////
 		render: function(container) {
 			var self = this,
+				container = container || $('#monster_content');
 /*
 				$container = _.isEmpty(container)
 					? $("#monster_content")
@@ -57,7 +58,6 @@ define(function (require) {
 					})
 				);
 */
-				container = container || $('#monster_content');
 
 			// Get the initial dynamic data we need before displaying the app
 			//self.listDevices(function(data) {
@@ -70,6 +70,13 @@ define(function (require) {
 						devices: data
 					}
 				}));
+
+
+				//If masquerading, disconnect previous websocket connections before re-connecting
+				if (monster.util.isMasquerading()) {
+					//monster.sub('switchboard.ws_cancel_previous', self.unsubscribeAllWS) //meh...doesn't work
+					//self.unsubscribeAllWS(monster.apps.auth.accountId); //unsubscribe from parent masquerading acct -- meh, connection is already changed at this point
+				};
 
 				// Bind UI and Socket events
 				self.bindUIEvents(switchboardTemplate);
@@ -101,6 +108,10 @@ define(function (require) {
 
 			template.find('#clearEvents').on('click', function() {
 				template.find('.table tbody tr:not(.no-events)').remove();
+			});
+
+			template.find('#disconnectWS').on('click', function() {
+				self.unsubscribeAllWS(self.accountId);
 			});
 
 			template.find('.device-item').on('click', function() {
@@ -203,14 +214,14 @@ define(function (require) {
 				}
 			};
 
+			console.log('Subscribing to Websockets...');
 			self.subscribeWebSocket({
 				binding: 'call.CHANNEL_CREATE.*',
 				requiredElement: template,
 				callback: function(event) {
 					onCalling(event);
 					addEvent(event);
-				},
-				error: (err) => { console.log("Error in subscribe!"); console.log(err); }
+				}
 			});
 			self.subscribeWebSocket({
 				binding: 'call.CHANNEL_ANSWER.*',
@@ -249,7 +260,33 @@ define(function (require) {
 				error: (err) => { console.log("Error in subscribe!"); console.log(err); }
 			});
 
+			//monster.pub('switchboard.ws_cancel_previous', self.accountId);
+
 		}, //bindSocketsEvents
+
+		bindings: [
+			'call.CHANNEL_CREATE.*',
+			'call.CHANNEL_ANSWER.*',
+			'call.CHANNEL_DESTROY.*',
+			'call.CHANNEL_HOLD.*',
+			'call.CHANNEL_UNHOLD.*'
+		],
+
+		unsubscribeAllWS: function(account_id) {
+			var self = this;
+			console.log('Received unsubscribe WS request for account ID: '+account_id);
+			self.unsubscribeWS(account_id, self.bindings);
+		},
+
+		unsubscribeWS: function(account_id, bindings) {
+			var self = this;
+				bindings.forEach( (b) => {
+					self.unsubscribeWebSocket({
+						accountId: account_id,
+						binding: b
+					});
+				});
+		},
 
 		padTime: function(val) {
 			var valString = val + "";
