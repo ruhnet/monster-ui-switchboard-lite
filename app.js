@@ -452,6 +452,7 @@ define(function (require) {
 			self.callApi({
 				resource: 'channel.list',
 				data: {
+					pagination: false,
 					accountId: self.accountId
 				},
 				success: function(channels) {
@@ -624,6 +625,7 @@ define(function (require) {
 			self.callApi({
 				resource: 'device.list',
 				data: {
+					pagination: false,
 					accountId: self.accountId
 				},
 				success: function(devices) {
@@ -677,6 +679,7 @@ define(function (require) {
 			self.callApi({
 				resource: 'device.getStatus',
 				data: {
+					pagination: false,
 					accountId: self.accountId
 				},
 				success: function(devices) {
@@ -697,6 +700,7 @@ define(function (require) {
 			self.callApi({
 				resource: 'device.get',
 				data: {
+					pagination: false,
 					deviceId: d_id,
 					accountId: self.accountId
 				},
@@ -717,6 +721,7 @@ define(function (require) {
 			self.callApi({
 				resource: 'user.list',
 				data: {
+					pagination: false,
 					accountId: self.accountId
 				},
 				success: function(users) {
@@ -735,6 +740,7 @@ define(function (require) {
 			self.callApi({
 				resource: 'user.get',
 				data: {
+					pagination: false,
 					userId: u_id,
 					accountId: self.accountId
 				},
