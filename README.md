@@ -46,7 +46,7 @@ firewall-cmd --reload
 ```
 
 ![Switchboard Main Screen](https://github.com/ruhnet/monster-ui-switchboard-lite/raw/master/metadata/screenshots/switchboard.png)
-###Simple Nginx Config to Proxy TLS for Websockets
+### Simple Nginx Config to Proxy TLS for Websockets
 ```
 upstream blackhole {
     server kazooapps1.mydomain.tld:5555;
