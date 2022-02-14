@@ -454,7 +454,7 @@ define(function (require) {
 				data: {
 					accountId: self.accountId,
 					filters: {
-						pagination: false
+						paginate: false
 					}
 				},
 				success: function(channels) {
@@ -629,7 +629,7 @@ define(function (require) {
 				data: {
 					accountId: self.accountId,
 					filters: {
-						pagination: false
+						paginate: false
 					}
 				},
 				success: function(devices) {
@@ -685,7 +685,7 @@ define(function (require) {
 				data: {
 					accountId: self.accountId,
 					filters: {
-						pagination: false
+						paginate: false
 					}
 				},
 				success: function(devices) {
@@ -709,7 +709,7 @@ define(function (require) {
 					deviceId: d_id,
 					accountId: self.accountId,
 					filters: {
-						pagination: false
+						paginate: false
 					}
 				},
 				success: function(device) {
@@ -731,7 +731,7 @@ define(function (require) {
 				data: {
 					accountId: self.accountId,
 					filters: {
-						pagination: false
+						paginate: false
 					}
 				},
 				success: function(users) {
@@ -753,7 +753,7 @@ define(function (require) {
 					userId: u_id,
 					accountId: self.accountId,
 					filters: {
-						pagination: false
+						paginate: false
 					}
 				},
 				success: function(user) {
