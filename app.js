@@ -452,8 +452,10 @@ define(function (require) {
 			self.callApi({
 				resource: 'channel.list',
 				data: {
-					pagination: false,
-					accountId: self.accountId
+					accountId: self.accountId,
+					filters: {
+						pagination: false
+					}
 				},
 				success: function(channels) {
 					callback(channels.data);
@@ -625,8 +627,10 @@ define(function (require) {
 			self.callApi({
 				resource: 'device.list',
 				data: {
-					pagination: false,
-					accountId: self.accountId
+					accountId: self.accountId,
+					filters: {
+						pagination: false
+					}
 				},
 				success: function(devices) {
 					//console.log(devices.data);
@@ -679,8 +683,10 @@ define(function (require) {
 			self.callApi({
 				resource: 'device.getStatus',
 				data: {
-					pagination: false,
-					accountId: self.accountId
+					accountId: self.accountId,
+					filters: {
+						pagination: false
+					}
 				},
 				success: function(devices) {
 					//console.log(devices.data);
@@ -700,9 +706,11 @@ define(function (require) {
 			self.callApi({
 				resource: 'device.get',
 				data: {
-					pagination: false,
 					deviceId: d_id,
-					accountId: self.accountId
+					accountId: self.accountId,
+					filters: {
+						pagination: false
+					}
 				},
 				success: function(device) {
 					//console.log(user.data);
@@ -721,8 +729,10 @@ define(function (require) {
 			self.callApi({
 				resource: 'user.list',
 				data: {
-					pagination: false,
-					accountId: self.accountId
+					accountId: self.accountId,
+					filters: {
+						pagination: false
+					}
 				},
 				success: function(users) {
 					callback(users.data);
@@ -740,9 +750,11 @@ define(function (require) {
 			self.callApi({
 				resource: 'user.get',
 				data: {
-					pagination: false,
 					userId: u_id,
-					accountId: self.accountId
+					accountId: self.accountId,
+					filters: {
+						pagination: false
+					}
 				},
 				success: function(user) {
 					//console.log(user.data);
