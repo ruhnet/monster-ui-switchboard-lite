@@ -39,7 +39,11 @@ Your `api` block in `js/config.js` should then look something like this:
     },
 ```
 
-Also, make sure that the Blackhole port you are using is open in your firewall
+Also, make sure that the Blackhole port you are using is open in your firewall:
+```
+firewall-cmd --permanent --add-port=5443/tcp
+firewall-cmd --reload
+```
 
 ![Switchboard Main Screen](https://github.com/ruhnet/monster-ui-switchboard-lite/raw/master/metadata/screenshots/switchboard.png)
 ###Simple Nginx Config to Proxy TLS for Websockets
