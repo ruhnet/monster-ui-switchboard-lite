@@ -30,7 +30,7 @@ Or if you are just running on a test server (or you want to live dangerously), a
 ```
 socket: 'ws://mykazooserver.tld:5555',
 ```
-**NOTE:** If your MonsterUI is served over HTTPS, then browsers will block connections to unencrypted websockets. So you must proxy with TLS if you also server MonsterUI over HTTPS. If you access Monster via unencrypted HTTP, then you can get by with using unencrypted plain websockets also.
+**NOTE:** If your MonsterUI is served over HTTPS, then browsers will block connections to unencrypted websockets. So you must proxy with TLS if you also serve MonsterUI over HTTPS. If you access Monster via unencrypted HTTP, then you can get by with using unencrypted plain websockets also.
 
 Your `api` block in `js/config.js` should then look something like this:
 ```
