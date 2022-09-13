@@ -30,6 +30,8 @@ Or if you are just running on a test server (or you want to live dangerously), a
 ```
 socket: 'ws://mykazooserver.tld:5555',
 ```
+**NOTE:** If your MonsterUI is served over HTTPS, then browsers will block connections to unencrypted websockets. So you must proxy with TLS if you also server MonsterUI over HTTPS. If you access Monster via unencrypted HTTP, then you can get by with using unencrypted plain websockets also.
+
 Your `api` block in `js/config.js` should then look something like this:
 ```
     api: {
@@ -46,13 +48,32 @@ firewall-cmd --reload
 ```
 
 ![Switchboard Main Screen](https://github.com/ruhnet/monster-ui-switchboard-lite/raw/master/metadata/screenshots/switchboard.png)
+### Simple HAProxy Config to Proxy TLS for Websockets
+(This is in addition to existing HAProxy config for CouchDB etc.) Note that HAProxy requires the key, cert, and CA to be bundled into a single PEM file.
+
+```
+listen kazoo-websockets
+    bind *:7777 ssl crt /etc/ssl/yourcertificate.pem
+    default_backend kapps-blackhole
+
+backend kapps-blackhole
+  balance source
+    option forwardfor
+    option http-server-close
+    option forceclose
+    no option httpclose
+    server kz1.z100-blackhole 1.2.3.4:5555 check
+    server kz2.z100-blackhole 2.3.4.5:5555 check
+    server kz1.z200-blackhole 123.123.123.234:5555 check backup
+```
+
 ### Simple Nginx Config to Proxy TLS for Websockets
 ```
 upstream blackhole {
     server kazooapps1.mydomain.tld:5555;
 }
 server {
-    listen 5443 ssl http2;
+    listen 7777 ssl http2;
     server_name mykazooserver.tld;
     location / {
 		proxy_pass http://blackhole;
@@ -62,8 +83,8 @@ server {
 		proxy_set_header Host $host;
 		proxy_set_header X-Real-IP $remote_addr;
     }
-    ssl_certificate /etc/ssl/mykazooserver.tld/fullchain.pem;
-    ssl_certificate_key /etc/ssl/mykazooserver.tld/privkey.pem;
+    ssl_certificate /etc/ssl/mykazooserver.tld/fullchain.crt;
+    ssl_certificate_key /etc/ssl/mykazooserver.tld/privkey.key;
     ssl_trusted_certificate /etc/ssl/mykazooserver.tld/fullchain.pem;
     ssl_dhparam /etc/ssl/private/dh_2048.pem;
     ssl_session_cache shared:SSL:20m;
