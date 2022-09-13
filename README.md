@@ -53,7 +53,7 @@ firewall-cmd --reload
 
 ```
 listen kazoo-websockets
-    bind *:7777 ssl crt /etc/ssl/yourcertificate.pem
+    bind *:5443 ssl crt /etc/ssl/yourcertificate.pem
     default_backend kapps-blackhole
 
 backend kapps-blackhole
@@ -71,9 +71,11 @@ backend kapps-blackhole
 ```
 upstream blackhole {
     server kazooapps1.mydomain.tld:5555;
+    server kazooapps2.mydomain.tld:5555;
+    server kazooapps1_zone2.mydomain.tld:5555 backup;
 }
 server {
-    listen 7777 ssl http2;
+    listen 5443 ssl http2;
     server_name mykazooserver.tld;
     location / {
 		proxy_pass http://blackhole;
