@@ -62,6 +62,8 @@ backend kapps-blackhole
     option http-server-close
     option forceclose
     no option httpclose
+    option httpchk HEAD / HTTP/1.1
+    http-check expect rstatus 4\d\d
     server kz1.z100-blackhole 1.2.3.4:5555 check
     server kz2.z100-blackhole 2.3.4.5:5555 check
     server kz1.z200-blackhole 123.123.123.234:5555 check backup
