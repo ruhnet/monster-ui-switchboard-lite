@@ -5,6 +5,54 @@ div.results-wrapper {
 	flex-direction: row;
 }
 
+div.results-wrapper2 {
+	/* width: 100%; */
+	display:flex;
+	flex-wrap: wrap;
+	flex-direction: row;
+}
+
+div.select-dialog-wrapper {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	font-size: 1.3em;
+}
+
+div.select-dialog {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	//padding: 10px;
+}
+
+.dialog-icons {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	padding: 10px;
+	color: royalblue;
+	font-size: 2em;
+}
+
+button.select-dialog-cancel {
+	//color: white;
+}
+
+button.select-dialog-submit {
+	//color: white;
+}
+
+select.transfer-select {
+	//height: 45px;
+	height: 2em;
+}
+
+select.callflow-select {
+	//height: 45px;
+	height: 2em;
+}
+
 div.content-row {
 	display:flex;
 	flex-direction: row;
@@ -60,6 +108,7 @@ div.device {
 	position: relative;
   	width: 300px;
   	/* height: 60px; */
+	height: 120px;
   	border: 2px solid #BFBFBF;
   	background-color: white;
   	box-shadow: 3px 3px 2px #aaaaaa;
@@ -81,7 +130,8 @@ div.device_sidepanel {
 	margin-right: auto;
 	width: 12px;
 	height: 100%;
-	background-color: #00ef33;
+	/* background-color: #00ef33; */
+	background-image: linear-gradient(#00ef33, #00a300);
 	border-top-left-radius: 8px;
 	border-bottom-left-radius: 8px;
 	border-right: 1px solid black;
@@ -148,7 +198,7 @@ div.direction_box {
 }
 
 div.device_owner {
-	font-size: small;
+	/* font-size: small; */
 	font-weight: lighter;
 	color: #444;
 }
@@ -183,6 +233,13 @@ div.device_owner {
 	font-weight: bold;
 }
 
+.active-extension {
+	/*
+	border: 2px solid orange;
+	*/
+	color: orange;
+}
+
 div.device_slot {
 	cursor: pointer;
 	position: absolute;
@@ -203,7 +260,8 @@ div.device_slot {
 }
 
 div.ext_active {
-	background-color: red;
+/*	background-color: red; */
+	background-image: linear-gradient(red, #d30000);
 }
 
 div.ext_override {
@@ -252,14 +310,21 @@ div.hotdesk_slot2 {
 	font-weight: bold;
 	cursor: pointer;
 	pointer-events: auto;
-	z-index: 0;
+	z-index: 1;
+}
+
+.pickup-park {
+	font-weight: bold;
+	cursor: pointer;
+	pointer-events: auto;
+	z-index: 1;
 }
 
 .device {
 	font-weight: bold;
-	cursor: pointer;
+/*	cursor: pointer; */
 	pointer-events: auto;
-	z-index: 0;
+	/* z-index: 0; */
 }
 
 .device_hidden {
@@ -284,10 +349,60 @@ div.callinfo {
 	margin-left: auto;
   	padding: 10px 10px 10px 19px;
 	/* position: absolute; */
+	pointer: normal;
 	pointer-events: none;
 }
 
+div.actions {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-end;
+	/* position: relative; */
+	position: absolute;
+	bottom: 0px;
+	float: right;
+	padding: 0px 10px 0px 10px;
+	right: 70px;
+	font-size: 1.2em;
+	z-index: 1;
+}
+
+i.actionbutton {
+	color: white;
+/*	background: royalblue; */
+	background-image: linear-gradient(#81a0ff, blue);
+	border-top-left-radius: 8px;
+	border-top-right-radius: 8px;
+	border-top: 1px solid grey;
+	border-left: 1px solid grey;
+	border-right: 1px solid grey;
+	margin-left: 1px;
+	margin-right: 2px;
+	padding: 4px 5px 2px 5px;
+	cursor: pointer;
+	width: 1em;
+	text-align: center;
+}
+
+/* fa-taxi is offset for some reason so we need to adjust padding */
+i.action-park {
+	padding-right: 8px;
+}
+/* telicon pickup is offset from font-awesome so we need to adjust */
+svg.telicon2 {
+	padding-bottom: 3px;
+	vertical-align: bottom;
+}
+
+i.disabled {
+	color: #eeeeee;
+	background-image: none;
+	background-color: grey;
+	cursor: not-allowed;
+}
+
 span.parked-call_caller {
+	padding-left: 16px;
 	font-size: medium;
 	font-weight: bold;
 	color: purple;
@@ -381,22 +496,30 @@ i.indicator_icon {
 }
 
 .ringing {
+	background-image: none;
 	animation: blinker 0.5s linear infinite;
 	background-color: red;
 }
 
+.on_call {
+	background-image: none;
+	background-color: orange;
+}
+
 .on_hold {
+	background-image: none;
 	background-color: grey;
 }
 
 .rotation {
 	color: red;
-	animation: flipper 2.0s linear infinite;
+	transform: rotate(-45deg);
+	animation: rotator 2.0s linear infinite;
 }
 
-@keyframes flipper {
+@keyframes rotator {
     50% {
-	    transform: rotate(90deg);
+	    transform: rotate(45deg);
 	}
 }
 

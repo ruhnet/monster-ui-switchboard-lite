@@ -4,8 +4,14 @@
 		"description": "Switchboard operator panel.",
 		"refreshButton": "Refresh",
 		"user": "User:",
+		"parker": "Parker:",
 		"listDevices": "Registered Devices",
 		"noTargets": "No Targets to Monitor",
+		"noParkedCalls": "No Parked Calls",
+		"actions": {
+			"cancel": "Cancel",
+			"transfer": "Transfer"
+		},
 		"events": {
 			"CHANNEL_CREATE": "Calling...",
 			"CHANNEL_ANSWER": "Answered",
@@ -26,9 +32,35 @@
 			"time": "Time",
 			"noEvents": "No events yet..."
 		},
+		"callflow_dialog": {
+			"title": "Send This Call to Callflow",
+			"actionText": "Send to Callflow",
+			"instructions": "Select the callflow to send this call to."
+		},
+		"transfer_dialog": {
+			"title": "Transfer This Call",
+			"actionText": "Transfer",
+			"instructions": "Select the user to transfer this call to."
+		},
+		"blacklist_dialog": {
+			"addedNumber": "Added number: ",
+			"toBlacklist": " to blacklist!",
+			"futureCallsBlocked": "Future calls from this number will be rejected.",
+			"removalHelp": "To remove the block, use the Callflows app (or contact your account administrator)."
+		},
 		"help": {
 			"title": "Switchboard - Help",
-			"helptext": "Retrieve a call by clicking the red panel, the slot number, or the caller name/number. Call the person who parked the call by clicking their name or number. The parking lot will auto-refresh every 30 seconds."
+			"helptext": "Retrieve a parked call by clicking the red panel, the slot number, or the caller name/number.",
+			"pickupMasquerade": "You cannot pickup a call when you are masquerading and not actually a user in the account.",
+			"quickcallFail": "FAILED to create call: ",
+			"actions": {
+				"pickup": "Pickup incoming call.",
+				"transfer": "Transfer call.",
+				"block": "Blacklist this caller.",
+				"callflow": "Send to callflow.",
+				"park": "Park call.",
+				"quickdial": "Connect to extension."
+			}
 		}
 	}
 

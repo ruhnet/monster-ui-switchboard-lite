@@ -8,27 +8,28 @@
 				<div class="content-row">
 					<div class="col devices-col">
 						<!-- <h4>{{ i18n.switchboard.listDevices }}</h4> -->
+						<div class="row">
+						<h3>Active Devices</h3>
 						<div class="results-wrapper">
 						{{#each devices}}
-							<div id="{{this.id}}" data-id="{{ this.id }}" class="device">
-								<div class="device_sidepanel pickup ringer"></div>
+							<div id="{{this.id}}" data-id="{{ this.id }}" data-callstate="" class="device">
+								<div class="device_sidepanel pickup ringer" data-extension-real="{{this.current_extension}}" data-extension="{{this.current_extension}}"></div>
 								<div class="call_indicator led"></div>
 								<div class="callinfo">
 									<div>
-										<i class="fa fa-volume-control-phone indicator_icon"></i>
-										<span class="device_name pickup">{{this.name}} {{this.cid_number}}</span>
+										<i class="fa fa-volume-control-phone indicator_icon pickup" data-extension="{{this.current_extension}}"></i>
+										<span class="device_name pickup" data-extension="{{this.current_extension}}">{{this.name}} {{this.cid_number}}</span>
 										<span class="dev_status">Idle</span>
 									</div>
 									<div class="device_owner">{{this.user.first_name}} {{this.user.last_name}}</div>
 									{{#if this.hotdesk_users.length}}
-									<div class="hotdesk_role">Hotdesk: 
+									<div class="hotdesk_role">Hotdesk:
 									{{#each this.hotdesk_users}}
 									[{{this.first_name}} {{this.last_name}}]
 									{{/each}}
 									</div>
 									{{/if}}
 									<!--<div class="device_owner">{{@root.i18n.switchboard.user}}</div> -->
-
 									<div>
 										<div class="remote">
 											<span class="remote_status"></span>
@@ -38,12 +39,11 @@
 										<div class="from"></div>
 										<div class="to"></div>
 									</div>
-
 									<div class="direction_box ringer"><i class="call_direction fa fa-circle"></i></div>
 									{{#each this.hotdesk_extensions}}
-									<div class="hotdesk_slot{{@index}} hotdesk pickup">{{ this }}</div>
+									<div class="hotdesk_slot{{@index}} hotdesk pickup" data-extension="{{this}}">{{ this }}</div>
 									{{/each}}
-									<div class="{{this.current_extension_status}} device_slot pickup">{{this.current_extension}}</div>
+									<div class="{{this.current_extension_status}} device_slot pickup" data-extension="{{this.current_extension}}" {{#compare this.current_extension.length ">" 5}} style="font-size: small;"{{/compare}}>{{this.current_extension}}</div>
 								</div> <!-- callinfo -->
 							</div> <!-- device -->
 						{{/each}}
@@ -53,7 +53,7 @@
 						<div class="activity_toggle"> <a data-toggle="toggle" data-target="#activity-log"><i class="fa fa-bars"></i></a></div><br />
 						<div id="activity-log" class="activity_outer_box collapse-horizontal">
 							<div class="activity_header">
-								<h4>{{ i18n.switchboard.log.title }} &nbsp;&nbsp; <button class="btn btn-primary" type="button" id="clearEvents">{{ i18n.switchboard.log.clearLog }}</button></h4>
+								<h4>{{ i18n.switchboard.log.title }} &nbsp;&nbsp; <button class="btn btn-primary" type="button" id="clearEvents">{{ i18n.switchboard.log.clearLog }}</button> <i id="disconnectWS" class="fa fa-minus-square"></i></h4>
 							</div>
 							<div class="activity_log_box">
 							<table class="table table-condensed list-events">

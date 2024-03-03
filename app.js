@@ -1,3 +1,23 @@
+//Switchboard
+//Copyright 2022-2024 RuhNet - All Rights Reserved
+//"Switchboard", "Switchboard Pro", and "Switchboard Lite" are trademarks of RuhNet.
+//https://ruhnet.co
+//
+//This software is distributed without warranty.
+//
+//You may use this software with a valid license from RuhNet, which has been
+//distributed to you with this software.
+//
+//This code can be optimized and cleaned up in many ways. Since Javascript is a
+//complex language with a gazillion ways of doing the same processes, as a
+//matter of taste I generally try to use the simplest and most obvious ways of
+//structuring functions for readability purposes. You may like it or not, for
+//various reasons, and you are likely right...
+//
+//I _hate_ Javascript, so I make no claims of beauty or cleverness. :D
+//
+
+
 define(function (require) {
 	var $ = require("jquery"),
 		_ = require("lodash"),
@@ -5,7 +25,6 @@ define(function (require) {
 
 		//generate random number/ID
 		//const genRandHex = size => [...Array(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');
-
 
 	var app = {
 		name: "switchboard",
@@ -35,11 +54,27 @@ define(function (require) {
 		initApp: function (callback) {
 			var self = this;
 
-			// Used to init the auth token and account id of this app
+			// Used to init the auth token and account ID of this app
 			monster.pub("auth.initApp", {
 				app: self,
 				callback: callback,
 			});
+		},
+
+
+		////////////////////////////////////////////////////////////////////
+		// APP CONFIGURATION - set true/false to enable/disable features.
+		////////////////////////////////////////////////////////////////////
+		config: {
+			enabledFeatures: {
+				transfer: true, //BETA
+				callflow: false, //ALPHA
+				block: false,
+				park: false,     //NON-WORKING - uses transfer, which doesn't work correctly with Konami and non-user/device transfers
+				pickup: true,
+				retrieve: true,
+			},
+			blacklistName: "switchboard-blocked",
 		},
 
 		//////////////////////////////////////////////////////////
@@ -47,7 +82,6 @@ define(function (require) {
 		//////////////////////////////////////////////////////////
 		render: function(container) {
 			var self = this,
-				container = container || $('#monster_content');
 /*
 				$container = _.isEmpty(container)
 					? $("#monster_content")
@@ -58,12 +92,12 @@ define(function (require) {
 					})
 				);
 */
+				container = container || $('#monster_content');
 
 			// Get the initial dynamic data we need before displaying the app
-			//self.listDevices(function(data) {
 			self.getFullDevices(function(data) {
 				//console.log(data);
-				// Load the data in a Handlebars template
+				// Load the devices data in a Handlebars template "layout"
 				var switchboardTemplate = $(self.getTemplate({
 					name: 'layout',
 					data: {
@@ -71,12 +105,6 @@ define(function (require) {
 					}
 				}));
 
-
-				//If masquerading, disconnect previous websocket connections before re-connecting
-				if (monster.util.isMasquerading()) {
-					//monster.sub('switchboard.ws_cancel_previous', self.unsubscribeAllWS) //meh...doesn't work
-					//self.unsubscribeAllWS(monster.apps.auth.accountId); //unsubscribe from parent masquerading acct -- meh, connection is already changed at this point
-				};
 
 				// Bind UI and Socket events
 				self.bindUIEvents(switchboardTemplate);
@@ -86,6 +114,8 @@ define(function (require) {
 				(container)
 					.empty()
 					.append(switchboardTemplate);
+
+
 				self.setCurrentCallStatus(switchboardTemplate);
 			});
 /*
@@ -110,6 +140,7 @@ define(function (require) {
 				template.find('.table tbody tr:not(.no-events)').remove();
 			});
 
+			//This disconnect websockets button is helpful when masquerading between accounts, otherwise old connections stay open.
 			template.find('#disconnectWS').on('click', function() {
 				self.unsubscribeAllWS(self.accountId);
 			});
@@ -137,22 +168,32 @@ define(function (require) {
 			"CHANNEL_DESTROY": "Idle",
 			"CHANNEL_HOLD": "Hold",
 			"CHANNEL_UNHOLD": "In Call",
-			"PARK_PARKED": "Parked",
-			"PARK_RETRIEVED": "Retrieved",
-			"PARK_ABANDONED": "Abandoned"
 		},
 
 		indicatorIcons: {
 			standby_icon: 'fa-circle',
+			inbound_icon: 'fa-arrow-down',
+			outbound_icon: 'fa-arrow-up',
+			//Alternate curved arrow icons if you like:
 			//inbound_icon: 'fa-mail-reply',
 			//outbound_icon: 'fa-mail-forward',
-			inbound_icon: 'fa-arrow-down',
-			outbound_icon: 'fa-arrow-up'
 		},
+
+		bindings: [
+			'call.CHANNEL_CREATE.*',
+			'call.CHANNEL_ANSWER.*',
+			'call.CHANNEL_DESTROY.*',
+			'call.CHANNEL_HOLD.*',
+			'call.CHANNEL_UNHOLD.*',
+			'call.PARK_PARKED.*',
+			'call.PARK_RETRIEVED.*',
+			'call.PARK_ABANDONED.*',
+		],
 
 		bindSocketsEvents: function(template) {
 			var self = this;
 
+			//Activity Log
 			var	addEvent = function(data) {
 				var ev = self.formatEvent(data),
 					eventTemplate = $(self.getTemplate({
@@ -173,6 +214,7 @@ define(function (require) {
 			}, 100)
 			*/
 
+			//Update device call events:
 			var onCalling = function(event) {
 				var ev = self.formatEvent(event);
 				if (ev.extra.deviceId) {
@@ -214,6 +256,7 @@ define(function (require) {
 				}
 			};
 
+			//Websockets setup:
 			console.log('Subscribing to Websockets...');
 			self.subscribeWebSocket({
 				binding: 'call.CHANNEL_CREATE.*',
@@ -221,7 +264,9 @@ define(function (require) {
 				callback: function(event) {
 					onCalling(event);
 					addEvent(event);
-				}
+					console.log(event);
+				},
+				error: (err) => { console.log("Error in subscribe!"); console.log(err); }
 			});
 			self.subscribeWebSocket({
 				binding: 'call.CHANNEL_ANSWER.*',
@@ -264,14 +309,6 @@ define(function (require) {
 
 		}, //bindSocketsEvents
 
-		bindings: [
-			'call.CHANNEL_CREATE.*',
-			'call.CHANNEL_ANSWER.*',
-			'call.CHANNEL_DESTROY.*',
-			'call.CHANNEL_HOLD.*',
-			'call.CHANNEL_UNHOLD.*'
-		],
-
 		unsubscribeAllWS: function(account_id) {
 			var self = this;
 			console.log('Received unsubscribe WS request for account ID: '+account_id);
@@ -280,12 +317,12 @@ define(function (require) {
 
 		unsubscribeWS: function(account_id, bindings) {
 			var self = this;
-				bindings.forEach( (b) => {
-					self.unsubscribeWebSocket({
-						accountId: account_id,
-						binding: b
-					});
+			bindings.forEach( (b) => {
+				self.unsubscribeWebSocket({
+					accountId: account_id,
+					binding: b
 				});
+			});
 		},
 
 		padTime: function(val) {
@@ -300,40 +337,64 @@ define(function (require) {
 		updateDeviceCalling: function(el, ev) {
 			var self = this;
 			el.css('background-color', '#ffeff0');
+			el.attr('data-callstate', ev.event_name);
 			el.find('.ringer').css('background-color', 'red');
 			el.find('i.indicator_icon').show();
 			el.find('i.indicator_icon').css('color', 'royalblue');
+			el.find('.ringer').css('background-image', 'none'); //remove gradient
 			el.find('.ringer').addClass('ringing');
-			el.find('div.dev_status').html(self.callStates[ev.event_name]);
+			el.find('.dev_status').html(self.callStates[ev.event_name]);
 			el.find('span.remote_status').html('Calling: ');
 			el.find('span.remote_name').html(ev.extra.remote_name);
 			el.find('span.remote_number').html(ev.extra.remote_number);
 			el.find('i.call_direction').removeClass('fa-circle');
-			if (ev.call_direction == 'outbound') {
+			//el.find('i.call_direction').css('color', '#00b7ff');
+			el.find('i.call_direction').css('color', 'orange');
+			if (ev.call_direction == 'outbound') { //inbound
+				el.css('background-color', '#ffc4c4');
+				//el.css('background-color', '#ffeff0');
 				el.find('i.call_direction').addClass(self.indicatorIcons.inbound_icon);
-			} else {
+				el.find('.device_sidepanel').attr('data-extension-real', el.find('.device_sidepanel').attr('data-extension'));
+				el.find('.device_sidepanel').attr('data-extension', ev.extra.to); //set current ringing extension to incoming call dest
+			} else { //outbound
+				el.css('background-color', '#d8c4ff');
+				//el.css('background-color', '#f8c4ff');
 				el.find('i.call_direction').addClass(self.indicatorIcons.outbound_icon);
 			}
 		},
 
 		updateDeviceOnCall: function(el, ev) {
 			var self = this;
-			el.css('background-color', '#ededed');
-			el.find('.ringer').css('background-color', 'orange');
+			el.attr('data-callstate', ev.event_name);
+			el.attr('data-callid', ev.call_id);
+			//el.css('background-color', '#ededed');
+			el.css('background-image', 'linear-gradient(#ededed, #cceded');
 			el.find('.ringer').removeClass('ringing');
+			el.find('.ringer').addClass('on_call');
+			el.find('.ringer').css('background-image', 'none'); //remove gradient
+			el.find('.device_sidepanel').css('background-image', 'linear-gradient(orange, #fb521a)');
 			el.find('i.indicator_icon').show();
 			el.find('i.indicator_icon').addClass('rotation');
 			el.find('i.indicator_icon').css('color', 'red');
-			el.find('.call_indicator').addClass('oncall');
 			el.find('.call_indicator').css('background-color', 'red');
 			el.find('.dev_status').html(self.callStates[ev.event_name]);
 			el.find('.remote_status').html('Talking: ');
-			let callTime = 0;
+			el.find('i.call_direction').removeClass('fa-circle');
+			el.find('i.call_direction').css('color', 'orange');
+			if (ev.call_direction == 'outbound') { //inbound
+				el.find('i.call_direction').addClass(self.indicatorIcons.inbound_icon);
+			} else {
+				el.find('i.call_direction').addClass(self.indicatorIcons.outbound_icon);
+			}
+			let callTime = 0; //FIXME: when showing a call in progress via channels API, this will be wrong. Use channels 'timestamp' to fix.
 			if (ev.elapsed_s) { //this is an existing channel, so we set calltime to match
 				callTime = ev.elapsed_s;
 			}
 			el.find('.call_timer_minutes').html('00');
 			el.find('.call_timer_seconds').html('00');
+
+			clearInterval(el.find('.call_timer').attr('data-timer'));
+
 			el.find('.call_timer').attr('data-timer',
 				setInterval(function() {
 					callTime = callTime + 1;
@@ -345,16 +406,25 @@ define(function (require) {
 
 		updateDeviceOffCall: function(el, ev) {
 			var self = this;
+			el.attr('data-callstate', ev.event_name);
 			clearInterval(el.find('.flasher').attr('data-flasher'));
 			clearInterval(el.find('.device-call_indicator').attr('data-flasher'));
 			el.css('background-color', 'white');
+			el.css('background-image', 'none'); //remove gradient
+			el.find('.ringer').css('background-image', 'none'); //remove gradient
 			el.find('i.indicator_icon').removeClass('rotation');
 			el.find('i.indicator_icon').css('color', '#333');
+			el.find('i.call_direction').css('color', 'royalblue');
 			el.find('.call_indicator').css('background-color', 'royalblue');
 			el.find('.call_indicator').removeClass('oncall');
-			el.find('.ringer').css('background-color', '#00ef33'); //green
+			//el.find('.ringer').css('background-color', '#00ef33'); //green
+			el.find('.ringer').css('background-image', 'linear-gradient(#00ef33, #00a300)'); //green to darker green
 			el.find('.ringer').removeClass('ringing');
+			el.find('.ringer').removeClass('on_call');
+			el.find('.direction_box').css('background-image', 'none');
+			el.find('.direction_box').css('background', 'none');
 			el.find('.dev_status').html(self.callStates[ev.event_name]);
+			el.find('.device_sidepanel').attr('data-extension', el.find('.device_sidepanel').attr('data-extension-real')); //set back to orig
 			el.find('i.call_direction').removeClass(self.indicatorIcons.outbound_icon);
 			el.find('i.call_direction').removeClass(self.indicatorIcons.inbound_icon);
 			el.find('i.call_direction').addClass(self.indicatorIcons.standby_icon);
@@ -369,8 +439,11 @@ define(function (require) {
 
 		updateDeviceHold_on: function(el, ev) {
 			var self = this;
-			el.css('background-color', 'grey');
+			el.attr('data-callstate', ev.event_name);
+			//el.css('background-color', 'grey');
+			el.css('background-image', 'linear-gradient(grey, lightgrey');
 			el.addClass('on_hold');
+			el.find('i.actionbutton').addClass('disabled');
 			el.find('i.indicator_icon').removeClass('rotation');
 			el.find('.call_indicator').css('background-color', 'black');
 			el.find('.dev_status').html(self.callStates[ev.event_name]+'<br />');
@@ -379,7 +452,9 @@ define(function (require) {
 
 		updateDeviceHold_off: function(el, ev) {
 			var self = this;
-			el.css('background-color', '#ededed');
+			el.attr('data-callstate', 'CHANNEL_ANSWER');
+			//el.css('background-color', '#ededed');
+			el.css('background-image', 'linear-gradient(#ededed, #cceded');
 			el.removeClass('on_hold');
 			el.find('i.indicator_icon').addClass('rotation');
 			el.find('.call_indicator').css('background-color', 'red');
@@ -387,7 +462,7 @@ define(function (require) {
 			el.find('.remote_status').html('Talking: ');
 		},
 
-		// Formatting data
+		// Formatting event data before we use it
 		formatEvent: function(data) {
 			var self = this;
 			var	ev = data;
@@ -415,6 +490,9 @@ define(function (require) {
 					ev.extra.deviceId = ev.authorizing_id;
 				}
 			}
+			if (ev.hasOwnProperty('uuid')) { //channels API has 'uuid' instead of 'call_id'
+				ev.call_id = ev.uuid;
+			}
 			if (ev.hasOwnProperty('to')) {
 				ev.extra.to = data.to.substr(0, data.to.indexOf('@'));
 			} else if (ev.destination) {
@@ -430,7 +508,10 @@ define(function (require) {
 				ev.callee_id_number = ev.destination;
 			}
 			//set friendly remote end
-			if (ev.call_direction == 'outbound') { //incoming call is "outbound" from Kazoo
+			if (!ev.call_direction) {
+				ev.call_direction = ev.direction;
+			}
+			if (ev.call_direction == 'outbound') { //incoming call is "outbound" from Kazoo, which is "inbound" for the user/device.
 				ev.extra.remote = ev.caller_id_name+' '+ev.caller_id_number;
 				ev.extra.remote_name = ev.caller_id_name;
 				ev.extra.remote_number = ev.caller_id_number;
@@ -446,6 +527,7 @@ define(function (require) {
 
 		setCurrentCallStatus: function(template) {
 			var self = this;
+			//devices and call status
 			self.getChannels( (channels) => {
 				//console.log(channels);
 				channels.forEach( (chan) => {
@@ -466,6 +548,10 @@ define(function (require) {
 			});
 		},
 
+		//Yeah yeah I know this looks goofy like callback h*ll but in fairness
+		//the lines aren't too awfully long and it makes sense and is easy to
+		//follow... I guess...
+		//I reckon using promises would be the hipster-cool-cat way to fix this.
 		getFullDevices: function(callback) {
 			var self = this;
 			self.listDevices(function(alldevices) {
@@ -633,22 +719,6 @@ define(function (require) {
 							}
 							device.hotdesk_extensions.push(ext);
 						});
-						/*
-						device.hotdesk_extensions = device.hotdesk_users.map(function(user) {
-							let ext;
-							if (user.presence_id) {
-								ext = user.presence_id;
-							}
-							if (user.caller_id) {
-								if (user.caller_id.internal) {
-									if (user.caller_id.internal.number) {
-										ext = user.caller_id.internal.number
-									}
-								}
-							}
-							return ext;
-						});
-						*/
 					}
 					outputDevices.push(device);
 					if (outputDevices.length == devices.length) resolve();
@@ -806,8 +876,8 @@ define(function (require) {
 		}
 
 
-		////////////////////////////////////////////////////////
-	};
+
+	}; //app
 
 	return app;
 });
