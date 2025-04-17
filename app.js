@@ -54,6 +54,11 @@ define(function (require) {
 		initApp: function (callback) {
 			var self = this;
 
+			self.initConfig(() => {
+				console.log("Initialized config.");
+				//console.log(self.config);
+			});
+
 			// Used to init the auth token and account ID of this app
 			monster.pub("auth.initApp", {
 				app: self,
@@ -61,21 +66,38 @@ define(function (require) {
 			});
 		},
 
-
 		////////////////////////////////////////////////////////////////////
-		// APP CONFIGURATION - set true/false to enable/disable features.
+		// Initiailize the config object
 		////////////////////////////////////////////////////////////////////
-		config: {
-			enabledFeatures: {
-				transfer: true, //BETA
-				callflow: false, //ALPHA
-				block: false,
-				park: false,     //NON-WORKING - uses transfer, which doesn't work correctly with Konami and non-user/device transfers
-				pickup: true,
-				retrieve: true,
-			},
-			blacklistName: "switchboard-blocked",
+		initConfig: function(callback) {
+			var self = this;
+			if (_.isEmpty(self.config)) {
+				if (!_.isEmpty(monster.config.switchboard)) {
+					self.config = monster.config.switchboard;
+					Object.keys(self.configDefault).forEach((configItem) => {
+						if (typeof self.config[configItem] === 'undefined') {
+							self.config[configItem] = self.configDefault[configItem];
+						}
+					});
+				} else {
+					self.config = self.configDefault;
+				}
+			}
+			return callback();
 		},
+		
+		config: {}, //fill this object up with config from js/config.js switchboard object, or default config
+		
+		////////////////////////////////////////////////////////////////////
+		// DEFAULT APP CONFIGURATION - set 'switchboard' object
+		// in {MONSTER-UI-WEB-DIR}/js/config.js to change these defaults.
+		////////////////////////////////////////////////////////////////////
+		configDefault: {
+			features: {},
+			deviceNameLengthLimit: 12,
+			deviceNameUseExtension: false,
+		},
+
 
 		//////////////////////////////////////////////////////////
 		// Entry Point of the app
@@ -694,6 +716,9 @@ define(function (require) {
 					if (device.user) {
 						if (device.user.presence_id) {
 							device.current_extension = device.user.presence_id;
+							if (device.name.length > self.config.deviceNameLengthLimit || self.config.deviceNameUseExtension) {
+								device.name = device.user.presence_id;
+							}
 						}
 						if (device.user.caller_id) {
 							if (device.user.caller_id.internal) {
