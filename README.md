@@ -4,7 +4,7 @@ This app allows you to view registered devices, with user/extension labels (incl
 
 The device's current extension appears in the lower right of the device object. Normally, it will be red. If a device has hotdesk users on it, the normal extension turns grey and the hotdesk extension[s] is displayed in pulsing blue above the normal extension.
 
-The "Lite" version is completely free and open source (released under the GPLv3). I would love for you to let me know if you are using it! Also give me a Github star if you find it useful. :-)
+The "Lite" version is completely free and open source. I would love for you to let me know if you are using it! Also give me a Github star if you find it useful. :-)
 
 The "Pro" version does everything the Lite version does, but it also allows you to answer/pickup calls, park calls, transfer calls, and shows parked calls in the parkinglot (and allows you to retrieve them with a click). Contact me via my site [https://ruhnet.co](https://ruhnet.co) for purchase information.
 

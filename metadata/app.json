@@ -2,8 +2,8 @@
 	"name": "switchboard",
 	"i18n": {
 		"en-US": {
-			"label": "Switchboard",
-			"description": "Switchboard operator panel."
+			"label": "Switchboard Lite",
+			"description": "Switchboard Lite operator panel."
 		}
 	},
 	"tags": [
@@ -16,7 +16,7 @@
 	"api_url": "",
 	"author": "RuhNet",
 	"version": "1.0",
-	"license": "GPLv3",
+	"license": "-",
 	"price": 0,
 	"urls": {
 		"documentation": "{documentation_url}",
