@@ -1,5 +1,5 @@
-//Switchboard
-//Copyright 2022-2024 RuhNet - All Rights Reserved
+//Switchboard Lite
+//Copyright 2022-2026 RuhNet - All Rights Reserved
 //"Switchboard", "Switchboard Pro", and "Switchboard Lite" are trademarks of RuhNet.
 //https://ruhnet.co
 //
@@ -783,11 +783,23 @@ define(function (require) {
 				if (devices.length == 0) resolve();
 				self.listDevicesStatus(function(rDevices) {	
 					if (rDevices.length == 0) resolve();
-					devices.forEach( (device) => {
-						rDevices.forEach( (rdevice) => {
+
+					targetLength = rDevices.length;
+
+					rDevices.forEach( (rdevice) => {
+						//if registered device is not found in the list, it's a Trunkstore PBX, so we shorten the target list size by one
+						const foundDevice = devices.find(d => d.id === rdevice.device_id);
+						if (!foundDevice) {
+							console.log("registered device "+rdevice.device_id+" not found in device list, so must be a Trunkstore PBX.");
+							targetLength--;
+						}
+						//console.log(foundDevice);
+
+						devices.forEach( (device) => {
+							//console.log(rdevice.device_id);
 							if (device.id == rdevice.device_id && rdevice.registered) {
 								registeredDevices.push(device);
-								if (registeredDevices.length == rDevices.length) resolve();
+								if (registeredDevices.length == targetLength) resolve();
 							}
 						});
 					});
@@ -845,7 +857,7 @@ define(function (require) {
 					}
 				},
 				success: function(device) {
-					//console.log(user.data);
+					//console.log(device.data);
 					callback(device.data);
 				},
 				error: function(err) {
