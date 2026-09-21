@@ -54,7 +54,7 @@ define(function (require) {
 		initApp: function (callback) {
 			var self = this;
 
-			self.initConfig(() => {
+			self.initConfig(function() {
 				console.log("Initialized config.");
 				//console.log(self.config);
 			});
@@ -74,7 +74,7 @@ define(function (require) {
 			if (_.isEmpty(self.config)) {
 				if (!_.isEmpty(monster.config.switchboard)) {
 					self.config = monster.config.switchboard;
-					Object.keys(self.configDefault).forEach((configItem) => {
+					Object.keys(self.configDefault).forEach(function(configItem) {
 						if (typeof self.config[configItem] === 'undefined') {
 							self.config[configItem] = self.configDefault[configItem];
 						}
@@ -288,7 +288,7 @@ define(function (require) {
 					addEvent(event);
 					console.log(event);
 				},
-				error: (err) => { console.log("Error in subscribe!"); console.log(err); }
+				error: function(err) { console.log("Error in subscribe!"); console.log(err); }
 			});
 			self.subscribeWebSocket({
 				binding: 'call.CHANNEL_ANSWER.*',
@@ -297,7 +297,7 @@ define(function (require) {
 					onCall(event);
 					addEvent(event);
 				},
-				error: (err) => { console.log("Error in subscribe!"); console.log(err); }
+				error: function(err) { console.log("Error in subscribe!"); console.log(err); }
 			});
 			self.subscribeWebSocket({
 				binding: 'call.CHANNEL_DESTROY.*',
@@ -306,7 +306,7 @@ define(function (require) {
 					onHangup(event);
 					addEvent(event);
 				},
-				error: (err) => { console.log("Error in subscribe!"); console.log(err); }
+				error: function(err) { console.log("Error in subscribe!"); console.log(err); }
 			});
 			self.subscribeWebSocket({
 				binding: 'call.CHANNEL_HOLD.*',
@@ -315,7 +315,7 @@ define(function (require) {
 					onHold(event);
 					addEvent(event);
 				},
-				error: (err) => { console.log("Error in subscribe!"); console.log(err); }
+				error: function(err) { console.log("Error in subscribe!"); console.log(err); }
 			});
 			self.subscribeWebSocket({
 				binding: 'call.CHANNEL_UNHOLD.*',
@@ -324,7 +324,7 @@ define(function (require) {
 					onResume(event);
 					addEvent(event);
 				},
-				error: (err) => { console.log("Error in subscribe!"); console.log(err); }
+				error: function(err) { console.log("Error in subscribe!"); console.log(err); }
 			});
 
 			//monster.pub('switchboard.ws_cancel_previous', self.accountId);
@@ -339,7 +339,7 @@ define(function (require) {
 
 		unsubscribeWS: function(account_id, bindings) {
 			var self = this;
-			bindings.forEach( (b) => {
+			bindings.forEach(function(b) {
 				self.unsubscribeWebSocket({
 					accountId: account_id,
 					binding: b
@@ -408,7 +408,7 @@ define(function (require) {
 			} else {
 				el.find('i.call_direction').addClass(self.indicatorIcons.outbound_icon);
 			}
-			let callTime = 0; //FIXME: when showing a call in progress via channels API, this will be wrong. Use channels 'timestamp' to fix.
+			var callTime = 0; //FIXME: when showing a call in progress via channels API, this will be wrong. Use channels 'timestamp' to fix.
 			if (ev.elapsed_s) { //this is an existing channel, so we set calltime to match
 				callTime = ev.elapsed_s;
 			}
@@ -550,10 +550,10 @@ define(function (require) {
 		setCurrentCallStatus: function(template) {
 			var self = this;
 			//devices and call status
-			self.getChannels( (channels) => {
+			self.getChannels(function(channels) {
 				//console.log(channels);
-				channels.forEach( (chan) => {
-					let channel = self.formatEvent(chan);
+				channels.forEach(function(chan) {
+					var channel = self.formatEvent(chan);
 					//console.log(channel);
 					if (channel.extra.deviceId) {
 						var el = template.find('#'+channel.extra.deviceId);
@@ -615,8 +615,8 @@ define(function (require) {
 
 		addOwnerToDevices: function(devices, callback) {
 			var self = this;
-			let outputDevices =	[];
-			let done = new Promise((resolve, reject) => {
+			var outputDevices =	[];
+			var done = new Promise(function(resolve, reject) {
 				if (devices.length == 0) resolve();
 				devices.forEach(function(device) {
 					self.getUser(device.owner_id, function(user) {
@@ -626,15 +626,15 @@ define(function (require) {
 					});		
 				});
 			});
-			done.then(() => {
+			done.then(function() {
 				callback(outputDevices);
 			});
 		},
 
 		addDetailToDevices: function(devices, callback) {
 			var self = this;
-			let outputDevices = [];
-			let done = new Promise((resolve, reject) => {
+			var outputDevices = [];
+			var done = new Promise(function(resolve, reject) {
 				if (devices.length == 0) resolve();
 				devices.forEach(function(device) {
 						self.getDevice(device.id, function(details) {
@@ -644,15 +644,15 @@ define(function (require) {
 					});		
 				});
 			});
-			done.then(() => {
+			done.then(function() {
 				callback(outputDevices);
 			});
 		},
 
 		addHotdeskUsersToDevices: function(devices, callback) {
 			var self = this;
-			let outputDevices = [];
-			let done = new Promise((resolve, reject) => {
+			var outputDevices = [];
+			var done = new Promise(function(resolve, reject) {
 				if (devices.length == 0) resolve();
 				//console.log(devices.length);
 				devices.forEach(function(device) {
@@ -663,18 +663,18 @@ define(function (require) {
 					});
 				});
 			});
-			done.then(() => {
+			done.then(function() {
 				callback(outputDevices);
 			});
 		},
 
 		addHotdeskUsersToDevice: function(device, callback) {
 			var self = this;
-			let hotdesk_users = [];
+			var hotdesk_users = [];
 			//device.hotdesk_users = [];
 			device.hotdesked = false;
 			device.current_extension_status = 'ext_active';
-			let done = new Promise((resolve, reject) => {
+			var done = new Promise(function(resolve, reject) {
 				if (device.detail) {
 					if (device.detail.hotdesk) {
 						if (device.detail.hotdesk.users) {
@@ -701,7 +701,7 @@ define(function (require) {
 					} else resolve();
 				} else resolve();
 			});
-			done.then(() => {
+			done.then(function() {
 				device.hotdesk_users = hotdesk_users;
 				callback(device);
 			});
@@ -709,8 +709,8 @@ define(function (require) {
 
 		addExtensionsToDevices: function(devices, callback) {
 			var self = this;
-			let outputDevices = [];
-			let done = new Promise((resolve, reject) => {
+			var outputDevices = [];
+			var done = new Promise(function(resolve, reject) {
 				if (devices.length == 0) resolve();
 				devices.forEach(function(device) {
 					if (device.user) {
@@ -730,8 +730,8 @@ define(function (require) {
 					}
 					if (device.hotdesked) {
 						device.hotdesk_extensions = [];
-						device.hotdesk_users.forEach( (user) => {
-							let ext;
+						device.hotdesk_users.forEach(function(user) {
+							var ext;
 							if (user.presence_id) {
 								ext = user.presence_id;
 							}
@@ -749,7 +749,7 @@ define(function (require) {
 					if (outputDevices.length == devices.length) resolve();
 				});
 			});
-			done.then(() => {
+			done.then(function() {
 				callback(outputDevices);
 			});
 		},
@@ -778,24 +778,24 @@ define(function (require) {
 
 		listRegisteredDevices: function(devices, callback) {
 			var self = this;
-			let registeredDevices = [];
-			let done = new Promise((resolve, reject) => {
+			var registeredDevices = [];
+			var done = new Promise(function(resolve, reject) {
 				if (devices.length == 0) resolve();
 				self.listDevicesStatus(function(rDevices) {	
 					if (rDevices.length == 0) resolve();
 
 					targetLength = rDevices.length;
 
-					rDevices.forEach( (rdevice) => {
+					rDevices.forEach(function(rdevice) {
 						//if registered device is not found in the list, it's a Trunkstore PBX, so we shorten the target list size by one
-						const foundDevice = devices.find(d => d.id === rdevice.device_id);
+						var foundDevice = devices.find(function(d) { return d.id === rdevice.device_id; });
 						if (!foundDevice) {
 							console.log("registered device "+rdevice.device_id+" not found in device list, so must be a Trunkstore PBX.");
 							targetLength--;
 						}
 						//console.log(foundDevice);
 
-						devices.forEach( (device) => {
+						devices.forEach(function(device) {
 							//console.log(rdevice.device_id);
 							if (device.id == rdevice.device_id && rdevice.registered) {
 								registeredDevices.push(device);
@@ -817,7 +817,7 @@ define(function (require) {
 					*/
 				});
 			});
-			done.then(() => {
+			done.then(function() {
 				callback(registeredDevices);
 			});
 		},
